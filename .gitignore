@@ -27,6 +27,10 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
+
+# agent files
+.agent
 
 # vercel
 .vercel
@@ -34,3 +38,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# temp generated files
+/tmp/*.docx
+/tmp/*.json
+
+/src/generated/prisma

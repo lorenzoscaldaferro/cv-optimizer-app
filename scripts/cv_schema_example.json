@@ -1,0 +1,71 @@
+{
+  "contact": {
+    "name": "Mateo González",
+    "phone": "+598 99 123 456",
+    "email": "mateo.gonzalez@gmail.com",
+    "linkedin": "linkedin.com/in/mateo-gonzalez",
+    "portfolio": "",
+    "location": "Montevideo, Uruguay"
+  },
+  "summary": "Estudiante avanzado de Licenciatura en Negocios Digitales (ORT Uruguay) con experiencia práctica en análisis de métricas digitales, estrategia de contenidos y gestión de proyectos académicos de e-commerce. Dominio de Google Analytics, Excel avanzado y herramientas de marketing digital. Orientado a resultados y en búsqueda de primera experiencia profesional para aportar valor analítico en un entorno digital dinámico.",
+  "education": [
+    {
+      "institution": "Universidad ORT Uruguay",
+      "degree": "Licenciatura en Negocios Digitales",
+      "dates": "2022 – Diciembre 2027 (estimado)",
+      "subtitle": null,
+      "details": [
+        "Promedio: 4.1/5.0",
+        "Materias relevantes: Marketing Digital, Análisis de Datos, Estrategia de Negocios, E-commerce, Fundamentos de Programación"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "Estrategia Digital para Marca de Indumentaria Deportiva",
+      "role": "Analista de Redes Sociales",
+      "dates": "Ago 2024 – Nov 2024",
+      "subtitle": "Universidad ORT Uruguay – Marketing Digital (Proyecto Grupal – Equipo de 4)",
+      "bullets": [
+        "Desarrollé la estrategia de contenidos para Instagram y TikTok, incluyendo calendario editorial de 12 semanas y A/B testing de 4 formatos de publicación, proyectando un crecimiento de seguidores del +500% (de 200 a 1.200) en 90 días",
+        "Analicé métricas semanales de alcance e interacción para optimizar frecuencia y formato de publicaciones, identificando los 2 contenidos de mayor rendimiento por plataforma",
+        "Presenté resultados al panel evaluador con propuesta de optimización basada en datos, obteniendo calificación final de 9/10"
+      ]
+    },
+    {
+      "title": "Análisis de Performance para E-commerce",
+      "role": "Analista Digital",
+      "dates": "Mar 2024 – Jun 2024",
+      "subtitle": "Universidad ORT Uruguay – Comercio Electrónico",
+      "bullets": [
+        "Analicé métricas de campañas digitales de una tienda de e-commerce ficticia en Google Analytics, identificando 3 segmentos de comportamiento de usuario clave",
+        "Elaboré reporte de performance en Excel avanzado con tablas dinámicas y visualizaciones para presentar hallazgos al equipo de trabajo",
+        "Propuse ajustes a la estrategia de contenidos basados en análisis de KPIs (tráfico, tasa de conversión, bounce rate), proyectando un incremento del 20% en conversiones"
+      ]
+    }
+  ],
+  "experience": [],
+  "skills": {
+    "Herramientas Digitales": "Google Analytics, Excel (avanzado), PowerPoint, Meta Ads Manager (básico), Mailchimp (básico), Canva",
+    "Marketing Digital": "Análisis de métricas, campañas digitales, estrategia de contenidos, email marketing, SEO (conocimientos)",
+    "Idiomas": "Español (nativo), Inglés (B2 — intermedio-avanzado)"
+  },
+  "extracurricular": [
+    {
+      "organization": "Club de Emprendedores ORT",
+      "role": "Tesorero",
+      "dates": "2023 – 2024",
+      "bullets": [
+        "Administré presupuesto anual de $8.000 USD procesando 12 informes mensuales de gastos con tasa de error del 0%",
+        "Renegocié contratos con 3 proveedores, reduciendo costos operativos en un 20% y liberando fondos para 2 nuevos eventos"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Google Analytics Certified (GA4)",
+      "issuer": "Google",
+      "date": "2024"
+    }
+  ]
+}

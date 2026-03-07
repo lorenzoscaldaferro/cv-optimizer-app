@@ -1,93 +1,162 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer base {
+  :root {
+    /* Forcing dark mode variables onto the root to ensure a pure dark aesthetic globally */
+    --background: 0 0% 4%;
+    /* #0A0A0A */
+    --foreground: 0 0% 100%;
+    /* Pure White */
+
+    --card: 0 0% 10%;
+    /* #1A1A1A */
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Retaining Cyan as primary but subtly adjusting if needed, matching developer tools */
+    --primary: 189 94% 43%;
+    /* #06B6D4 cyan-500 */
+    --primary-foreground: 0 0% 4%;
+    /* #0A0A0A */
+
+    /* Subtle Grey */
+    --secondary: 0 0% 15%;
+    /* #262626 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    /* Soft grey text */
+
+    /* Neon Emerald Accent */
+    --accent: 142 71% 45%;
+    /* #22C55E emerald-500 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    /* #333333 */
+    --input: 0 0% 15%;
+    --ring: 0 0% 50%;
+    /* Neutral ring */
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Identical to root */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 189 94% 43%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 0 0% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
   }
 }
 
-@layer base {
-  :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.58 0.22 27);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.809 0.105 251.813);
-    --chart-2: oklch(0.623 0.214 259.815);
-    --chart-3: oklch(0.546 0.245 262.881);
-    --chart-4: oklch(0.488 0.243 264.376);
-    --chart-5: oklch(0.424 0.199 265.638);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+@layer components {
+
+  /* Framer-style Animations */
+  @keyframes background-pan {
+    from {
+      background-position: 0% center;
+    }
+
+    to {
+      background-position: -200% center;
+    }
   }
-  .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.87 0.00 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.371 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.809 0.105 251.813);
-    --chart-2: oklch(0.623 0.214 259.815);
-    --chart-3: oklch(0.546 0.245 262.881);
-    --chart-4: oklch(0.488 0.243 264.376);
-    --chart-5: oklch(0.424 0.199 265.638);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+
+  .animate-bg-pan {
+    animation: background-pan 10s linear infinite;
   }
-  .theme {
-    --font-sans: var(--font-sans);
+
+  @keyframes border-beam {
+    100% {
+      transform: translateX(100%);
+    }
   }
-  * {
-    @apply border-border outline-ring/50;
+
+  /* Button Classes */
+  .btn-primary {
+    @apply relative overflow-hidden bg-foreground text-background px-6 py-3 rounded-lg font-sans font-medium transition-all duration-300 cursor-pointer;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(0, 0, 0, 0.1),
+        transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
   }
-  html {
-    @apply font-sans;
+
+  .btn-primary:hover {
+    @apply bg-foreground/90;
+    box-shadow: 0 0 20px -5px rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-primary:hover::before {
+    animation: border-beam 1.5s infinite;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-foreground border border-border px-6 py-3 rounded-lg font-sans font-medium transition-all duration-300 cursor-pointer;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-secondary border-muted text-foreground;
+  }
+
+  /* Card Class */
+  .card {
+    @apply bg-card rounded-xl p-6 transition-all duration-500 border border-border;
+  }
+
+  .card:hover {
+    @apply border-muted bg-card/80;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Input Class */
+  .input {
+    @apply px-4 py-3 bg-secondary/30 border border-border rounded-lg text-base transition-all duration-300 w-full text-foreground placeholder:text-muted-foreground;
+  }
+
+  .input:focus {
+    @apply border-muted outline-none ring-1 ring-muted/50 bg-secondary/50;
   }
 }
