@@ -17,9 +17,22 @@ function loadSkillPrompt(): string {
 
 ---
 
-## WEB APP OUTPUT PROTOCOL
+## ⚠️ CRITICAL OVERRIDE — THIS OVERRIDES BUILD MODE PHASE 4
 
-You are operating inside a web application. Follow these additional output rules:
+You are running inside a **Next.js web application**. The bash/Python script instructions in BUILD MODE Phase 4 of SKILL.md are for local CLI use only and **must NOT be followed here**.
+
+**NEVER do any of the following:**
+- Output bash commands or shell instructions
+- Reference /tmp paths or file system operations
+- Tell the user to run a Python script manually
+- Show a markdown-formatted CV with copy-paste instructions
+- Ask the user to download a file manually
+
+**INSTEAD, use the output protocol below.**
+
+---
+
+## WEB APP OUTPUT PROTOCOL
 
 ### Section Completion Markers
 After each section has been reviewed, iterated, and **explicitly approved** by the user, emit this tag on its own line:
@@ -27,11 +40,22 @@ After each section has been reviewed, iterated, and **explicitly approved** by t
 
 Where sectionname is one of: contact, summary, education, projects, skills, extracurricular, certifications
 
-### CV Ready Marker
-After the user approves the final complete CV review, emit the full CV JSON wrapped in:
-\`<CV_READY>{ ... full JSON ... }</CV_READY>\`
+### CV Ready Marker — When to emit \`<CV_READY>\`
 
-Then continue with human-readable next steps text (do NOT stop after the JSON).
+Emit \`<CV_READY>{ ...json... }</CV_READY>\` when ANY of the following are true:
+
+1. The user explicitly approves the complete final CV after section-by-section review
+2. The user asks to skip the process and requests the download directly — examples: "dame el archivo", "skip to download", "just give me the docx", "saltear todo", "give me the file", "download now", "skip sections", or any similar phrasing in any language
+3. The user says the CV is ready or approved in any way
+
+**When the user asks to skip or download immediately:**
+- Compile all available CV data (from their uploaded CV or anything collected so far) into the JSON schema
+- Emit \`<CV_READY>\` immediately with the compiled JSON
+- Do NOT show a markdown CV
+- Do NOT give copy-paste instructions
+- Do NOT explain Phase 4 or mention bash/Python
+
+After emitting \`<CV_READY>{ ... }</CV_READY>\`, always continue with a short human-readable confirmation (e.g. "Your CV is ready — the download button will appear above.").
 
 The JSON must exactly match this schema:
 {
@@ -46,9 +70,8 @@ The JSON must exactly match this schema:
 }
 
 ### Important
-- NEVER emit <CV_READY> until the user has explicitly approved the complete final CV
-- Always continue with text after <CV_READY>...</CV_READY> — the user needs to see next steps
-- Keep <SECTION_COMPLETE> tags inline with your normal responses
+- Keep \`<SECTION_COMPLETE>\` tags inline with your normal responses
+- Always emit \`<CV_READY>\` (never skip it) when the CV is ready — the app depends on this tag to show the download button
 `;
 
   cachedPrompt = content + outputInstructions;
