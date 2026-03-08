@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useCVStore } from "@/store/cv-store";
 import { Message } from "@/types/chat";
+import { CVData } from "@/types/cv";
 
 const SECTION_COMPLETE_RE = /<SECTION_COMPLETE>(\w+)<\/SECTION_COMPLETE>/g;
 const CV_READY_RE = /<CV_READY>([\s\S]*?)<\/CV_READY>/;
@@ -100,7 +101,7 @@ export function useStreamingChat() {
         // Detect CV_READY and trigger generation inline (no useEffect chain)
         const cvReadyMatch = rawAccumulated.match(CV_READY_RE);
         if (cvReadyMatch) {
-          let cvData: Record<string, unknown> | null = null;
+          let cvData: CVData | null = null;
           try {
             cvData = JSON.parse(cvReadyMatch[1]);
           } catch {
@@ -108,7 +109,7 @@ export function useStreamingChat() {
           }
           if (cvData) {
             setCVData(cvData);
-            const name = (cvData.contact as Record<string, string> | undefined)?.name
+            const name = cvData.contact?.name
               ?.replace(/\s+/g, "_")
               .replace(/[^a-zA-Z0-9_]/g, "");
             const filename = `CV_${name || "output"}.docx`;
