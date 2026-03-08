@@ -72,6 +72,7 @@ The JSON must exactly match this schema:
 ### Important
 - Keep \`<SECTION_COMPLETE>\` tags inline with your normal responses
 - Always emit \`<CV_READY>\` (never skip it) when the CV is ready — the app depends on this tag to show the download button
+- Do NOT render the JSON in a markdown code block. Embed it only inside the \`<CV_READY>\` tag — never outside it.
 `;
 
   cachedPrompt = content + outputInstructions;

@@ -24,7 +24,6 @@ export function useStreamingChat() {
     commitStreamingMessage,
     markSectionComplete,
     setCVData,
-    setShowModal,
     aiEngine,
     geminiApiKey,
     openaiApiKey,
@@ -95,7 +94,6 @@ export function useStreamingChat() {
           try {
             const cvData = JSON.parse(cvReadyMatch[1]);
             setCVData(cvData);
-            setShowModal(true);
           } catch {
             console.error("Failed to parse CV_READY JSON");
           }
@@ -186,7 +184,6 @@ export function useStreamingChat() {
       commitStreamingMessage,
       markSectionComplete,
       setCVData,
-      setShowModal,
       aiEngine,
       geminiApiKey,
       openaiApiKey,
