@@ -11,7 +11,8 @@ const CV_READY_RE = /<CV_READY>([\s\S]*?)<\/CV_READY>/;
 function stripTags(text: string): string {
   return text
     .replace(/<SECTION_COMPLETE>\w+<\/SECTION_COMPLETE>/g, "")
-    .replace(/<CV_READY>[\s\S]*?<\/CV_READY>/g, "");
+    .replace(/<CV_READY>[\s\S]*?<\/CV_READY>/g, "")  // complete blocks
+    .replace(/<CV_READY>[\s\S]*/g, "");               // partial/in-progress
 }
 
 export function useStreamingChat() {

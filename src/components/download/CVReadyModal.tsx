@@ -30,24 +30,24 @@ export function CVReadyModal() {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.4 }}
           >
-            <div className="mx-4 rounded-2xl bg-slate-900 border border-slate-700 p-6 shadow-2xl">
+            <div className="mx-4 rounded-2xl bg-card border border-border p-6 shadow-2xl">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20 border border-indigo-500/30">
-                    <FileText className="h-5 w-5 text-indigo-400" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+                    <FileText className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h2 className="font-semibold text-slate-100">
+                    <h2 className="font-semibold text-foreground">
                       Your CV is ready
                     </h2>
-                    <p className="text-xs text-slate-500">ATS-optimized .docx</p>
+                    <p className="text-xs text-muted-foreground">ATS-optimized .docx</p>
                   </div>
                 </div>
                 {!isGenerating && (
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-slate-500 hover:text-slate-300"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
                     onClick={() => setShowModal(false)}
                   >
                     <X className="h-4 w-4" />
@@ -57,25 +57,25 @@ export function CVReadyModal() {
 
               {isGenerating ? (
                 <div className="flex flex-col items-center gap-3 py-6">
-                  <Loader2 className="h-8 w-8 text-indigo-400 animate-spin" />
-                  <p className="text-sm text-slate-400">
+                  <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                  <p className="text-sm text-muted-foreground">
                     Generating your .docx file...
                   </p>
                 </div>
               ) : downloadUrl ? (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-sm text-emerald-400">
+                  <div className="flex items-center gap-2 text-sm text-primary">
                     <CheckCircle2 className="h-4 w-4 shrink-0" />
                     <span>File generated successfully</span>
                   </div>
 
                   <DownloadButton url={downloadUrl} />
 
-                  <div className="rounded-lg bg-slate-800 p-3 space-y-1.5">
-                    <p className="text-xs font-medium text-slate-400">
+                  <div className="rounded-lg bg-muted/20 p-3 space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground">
                       Next steps:
                     </p>
-                    <ul className="text-xs text-slate-500 space-y-1">
+                    <ul className="text-xs text-muted-foreground space-y-1">
                       <li>1. Open in Word or Google Docs to review</li>
                       <li>2. Export to PDF if the posting requires it</li>
                       <li>3. Tailor the summary for each application</li>

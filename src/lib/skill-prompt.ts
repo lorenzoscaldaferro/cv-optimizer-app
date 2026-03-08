@@ -73,6 +73,7 @@ The JSON must exactly match this schema:
 - Keep \`<SECTION_COMPLETE>\` tags inline with your normal responses
 - Always emit \`<CV_READY>\` (never skip it) when the CV is ready — the app depends on this tag to show the download button
 - Do NOT render the JSON in a markdown code block. Embed it only inside the \`<CV_READY>\` tag — never outside it.
+- **CRITICAL — Preserve all numbers and metrics:** When compiling CV data for the JSON, NEVER replace specific quantities, financial figures, percentages, or measurable results with vague language. If the original CV says "USD 259.200 anuales" keep that exact figure. Removing real metrics is worse than keeping them — the SKILL.md rule "Zero quantified results" is a failure mode to avoid, not an invitation to fabricate vague substitutes.
 `;
 
   cachedPrompt = content + outputInstructions;

@@ -1,5 +1,6 @@
 "use client";
 
+import { Download } from "lucide-react";
 import { useCVStore } from "@/store/cv-store";
 import { useStreamingChat } from "@/hooks/useStreamingChat";
 import { useCVReady } from "@/hooks/useCVReady";
@@ -21,7 +22,7 @@ const defaultModels: Record<string, string> = {
 };
 
 export function ChatInterface() {
-  const { sessionMode, messages, aiEngine, openrouterModel } = useCVStore();
+  const { sessionMode, messages, aiEngine, openrouterModel, downloadUrl, setShowModal } = useCVStore();
   const { sendMessage } = useStreamingChat();
 
   // Register side-effect hooks
@@ -61,6 +62,15 @@ export function ChatInterface() {
                 <span className="text-[10px] text-muted-foreground">
                     • {modelDisplay}
                 </span>
+            )}
+            {downloadUrl && (
+              <button
+                onClick={() => setShowModal(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 border border-primary/20 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
+              >
+                <Download className="h-3 w-3" />
+                CV listo
+              </button>
             )}
         </div>
       </div>

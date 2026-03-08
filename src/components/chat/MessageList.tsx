@@ -19,6 +19,7 @@ export function MessageList() {
   function cleanStreaming(content: string): string {
     return content
       .replace(/<CV_READY>[\s\S]*?<\/CV_READY>/g, "")
+      .replace(/<CV_READY>[\s\S]*/g, "")
       .replace(/<SECTION_COMPLETE>[\w]+<\/SECTION_COMPLETE>/g, "")
       .trim();
   }
