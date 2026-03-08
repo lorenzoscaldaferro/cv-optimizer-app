@@ -4,13 +4,14 @@ import { useEffect, useRef } from "react";
 import { useCVStore } from "@/store/cv-store";
 
 export function useCVReady() {
-  const { cvData, setIsGenerating, setDownloadUrl, setShowModal } =
+  const { cvData, showModal, setIsGenerating, setDownloadUrl, setShowModal } =
     useCVStore();
 
   const processedRef = useRef(false);
 
   useEffect(() => {
-    if (!cvData || processedRef.current) return;
+    // Only trigger if cvData is set but no modal is active (page refresh case)
+    if (!cvData || processedRef.current || showModal) return;
     processedRef.current = true;
 
     const name = cvData.contact?.name
@@ -40,5 +41,5 @@ export function useCVReady() {
       .catch(() => {
         setIsGenerating(false);
       });
-  }, [cvData, setIsGenerating, setDownloadUrl, setShowModal]);
+  }, [cvData, showModal, setIsGenerating, setDownloadUrl, setShowModal]);
 }

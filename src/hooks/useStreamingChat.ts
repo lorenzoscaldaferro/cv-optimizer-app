@@ -20,10 +20,11 @@ export function useStreamingChat() {
     addMessage,
     setIsStreaming,
     setStreamingContent,
-    appendStreamingContent,
-    commitStreamingMessage,
     markSectionComplete,
     setCVData,
+    setIsGenerating,
+    setShowModal,
+    setDownloadUrl,
     aiEngine,
     geminiApiKey,
     openaiApiKey,
@@ -88,21 +89,54 @@ export function useStreamingChat() {
           markSectionComplete(match[1]);
         }
 
-        // Detect and fire CV_READY tag
+        // Commit clean message directly (bypasses streamingContent relay timing issue)
+        const clean = stripTags(rawAccumulated).trim();
+        if (clean) {
+          addMessage({ id: crypto.randomUUID(), role: "assistant", content: clean, timestamp: new Date() });
+        }
+        setStreamingContent("");
+        setIsStreaming(false);
+
+        // Detect CV_READY and trigger generation inline (no useEffect chain)
         const cvReadyMatch = rawAccumulated.match(CV_READY_RE);
         if (cvReadyMatch) {
+          let cvData: Record<string, unknown> | null = null;
           try {
-            const cvData = JSON.parse(cvReadyMatch[1]);
-            setCVData(cvData);
+            cvData = JSON.parse(cvReadyMatch[1]);
           } catch {
             console.error("Failed to parse CV_READY JSON");
           }
-        }
+          if (cvData) {
+            setCVData(cvData);
+            const name = (cvData.contact as Record<string, string> | undefined)?.name
+              ?.replace(/\s+/g, "_")
+              .replace(/[^a-zA-Z0-9_]/g, "");
+            const filename = `CV_${name || "output"}.docx`;
 
-        // Replace streaming content with tag-stripped version before committing
-        const clean = stripTags(rawAccumulated).trim();
-        setStreamingContent(clean);
-        commitStreamingMessage();
+            setIsGenerating(true);
+            setShowModal(true);
+
+            fetch("/api/generate-docx", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ cvJson: cvData, filename }),
+            })
+              .then((r) => {
+                if (!r.ok) throw new Error("Generation failed");
+                return r.arrayBuffer();
+              })
+              .then((buffer) => {
+                const blob = new Blob([buffer], {
+                  type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                });
+                setDownloadUrl(URL.createObjectURL(blob));
+                setIsGenerating(false);
+              })
+              .catch(() => {
+                setIsGenerating(false);
+              });
+          }
+        }
       }
 
       try {
@@ -147,11 +181,8 @@ export function useStreamingChat() {
               }
               if (parsed.text) {
                 rawAccumulated += parsed.text;
-                // Strip tags for live display so they don't flash in the UI
-                const displayChunk = stripTags(parsed.text);
-                if (displayChunk) {
-                  appendStreamingContent(displayChunk);
-                }
+                // Re-derive display from full accumulator so complete tags are always stripped
+                setStreamingContent(stripTags(rawAccumulated));
               }
               if (parsed.error) {
                 throw new Error(parsed.error);
@@ -180,10 +211,11 @@ export function useStreamingChat() {
       addMessage,
       setIsStreaming,
       setStreamingContent,
-      appendStreamingContent,
-      commitStreamingMessage,
       markSectionComplete,
       setCVData,
+      setIsGenerating,
+      setShowModal,
+      setDownloadUrl,
       aiEngine,
       geminiApiKey,
       openaiApiKey,
