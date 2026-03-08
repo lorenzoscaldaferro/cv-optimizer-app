@@ -95,7 +95,7 @@ export function InputBar({ onSend, suggestions = [] }: InputBarProps) {
         </Button>
       </div>
       <p className="mt-1.5 text-center text-xs text-muted-foreground font-sans tracking-wide">
-        Shift+Enter for new line
+        Shift+Enter para nueva línea
       </p>
     </div>
   );

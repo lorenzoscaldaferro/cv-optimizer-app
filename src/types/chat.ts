@@ -19,11 +19,11 @@ export interface SectionState {
 }
 
 export const SECTIONS: SectionState[] = [
-  { id: "contact", label: "Contact Info", status: "pending" },
-  { id: "summary", label: "Professional Summary", status: "pending" },
-  { id: "education", label: "Education", status: "pending" },
-  { id: "projects", label: "Projects", status: "pending" },
-  { id: "skills", label: "Skills", status: "pending" },
-  { id: "extracurricular", label: "Extracurricular", status: "pending" },
-  { id: "certifications", label: "Certifications", status: "pending" },
+  { id: "contact", label: "Información de contacto", status: "pending" },
+  { id: "summary", label: "Resumen profesional", status: "pending" },
+  { id: "education", label: "Educación", status: "pending" },
+  { id: "projects", label: "Proyectos y experiencia", status: "pending" },
+  { id: "skills", label: "Habilidades", status: "pending" },
+  { id: "extracurricular", label: "Actividades extracurriculares", status: "pending" },
+  { id: "certifications", label: "Certificaciones", status: "pending" },
 ];
