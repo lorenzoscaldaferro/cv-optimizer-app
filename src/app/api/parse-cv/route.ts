@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require("pdf-parse") as (buffer: Buffer) => Promise<{ text: string }>;
 import mammoth from "mammoth";
 
 export async function POST(req: NextRequest) {
@@ -17,6 +15,8 @@ export async function POST(req: NextRequest) {
 
   try {
     if (filename.endsWith(".pdf")) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const pdfParse = require("pdf-parse") as (buffer: Buffer) => Promise<{ text: string }>;
       const result = await pdfParse(buffer);
       text = result.text;
     } else if (filename.endsWith(".docx")) {
