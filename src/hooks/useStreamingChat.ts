@@ -198,10 +198,11 @@ export function useStreamingChat() {
         setIsStreaming(false);
         setStreamingContent("");
         const error = err as Error;
+        console.error("Chat error:", error.message);
         const errorMessage: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: `Sorry, there was an error: ${error.message}. Please try again.`,
+          content: "Lo siento, hubo un error al procesar tu mensaje. Por favor, intentá de nuevo.",
           timestamp: new Date(),
         };
         addMessage(errorMessage);

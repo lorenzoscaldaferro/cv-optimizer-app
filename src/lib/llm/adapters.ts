@@ -29,15 +29,24 @@ export class GeminiAdapter implements LLMAdapter {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async stream(messages: any[], onChunk: (text: string) => void): Promise<LLMResponse> {
-        // Convert messages to Gemini format
-        const history = messages.slice(0, -1).map(m => ({
+        // Separate system message from conversation messages
+        const systemMsg = messages.find(m => m.role === "system");
+        const conversationMessages = messages.filter(m => m.role !== "system");
+
+        const history = conversationMessages.slice(0, -1).map(m => ({
             role: m.role === "user" ? "user" : "model",
             parts: [{ text: typeof m.content === 'string' ? m.content : JSON.stringify(m.content) }]
         }));
 
-        const lastMessage = messages[messages.length - 1];
+        const lastMessage = conversationMessages[conversationMessages.length - 1];
 
-        const chat = this.model.startChat({ history });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const chatConfig: any = { history };
+        if (systemMsg) {
+            chatConfig.systemInstruction = { parts: [{ text: systemMsg.content }] };
+        }
+
+        const chat = this.model.startChat(chatConfig);
         const result = await chat.sendMessageStream(lastMessage.content);
 
         let fullContent = "";
