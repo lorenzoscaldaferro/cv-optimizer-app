@@ -32,7 +32,10 @@ export function useStreamingChat() {
     openaiApiKey,
     openrouterApiKey,
     groqApiKey,
+    geminiModel,
+    openaiModel,
     openrouterModel,
+    groqModel,
   } = useCVStore();
 
   const sendMessage = useCallback(
@@ -59,15 +62,15 @@ export function useStreamingChat() {
       const getApiKeyAndModel = () => {
         switch (selectedEngine) {
           case "gemini":
-            return { apiKey: geminiApiKey, model: undefined };
+            return { apiKey: geminiApiKey, model: geminiModel };
           case "chatgpt":
-            return { apiKey: openaiApiKey, model: undefined };
+            return { apiKey: openaiApiKey, model: openaiModel };
           case "openrouter":
             return { apiKey: openrouterApiKey, model: openrouterModel };
           case "groq":
-            return { apiKey: groqApiKey, model: undefined };
+            return { apiKey: groqApiKey, model: groqModel };
           default:
-            return { apiKey: geminiApiKey, model: undefined };
+            return { apiKey: geminiApiKey, model: geminiModel };
         }
       };
       
@@ -224,7 +227,10 @@ export function useStreamingChat() {
       openaiApiKey,
       openrouterApiKey,
       groqApiKey,
+      geminiModel,
+      openaiModel,
       openrouterModel,
+      groqModel,
     ]
   );
 

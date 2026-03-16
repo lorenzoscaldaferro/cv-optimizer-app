@@ -22,6 +22,8 @@ interface CVStore {
   groqApiKey: string | null;
 
   // Model selection (for providers that support custom models)
+  geminiModel: string;
+  openaiModel: string;
   openrouterModel: string;
   groqModel: string;
 
@@ -75,8 +77,10 @@ const initialState = {
   openaiApiKey: null,
   openrouterApiKey: null,
   groqApiKey: null,
+  geminiModel: "gemini-2.5-flash",
+  openaiModel: "gpt-4o",
   openrouterModel: "auto",
-  groqModel: "llama-3.1-70b-versatile",
+  groqModel: "llama-3.3-70b-versatile",
   messages: [],
   isStreaming: false,
   streamingContent: "",
@@ -126,12 +130,14 @@ export const useCVStore = create<CVStore>()(
 
       setModel: (engine, model) => {
         switch (engine) {
+          case "gemini":
+            return set({ geminiModel: model });
+          case "chatgpt":
+            return set({ openaiModel: model });
           case "openrouter":
             return set({ openrouterModel: model });
           case "groq":
             return set({ groqModel: model });
-          default:
-            return;
         }
       },
 
@@ -204,6 +210,8 @@ export const useCVStore = create<CVStore>()(
         messages: state.messages,
         sections: state.sections,
         cvData: state.cvData,
+        geminiModel: state.geminiModel,
+        openaiModel: state.openaiModel,
         openrouterModel: state.openrouterModel,
         groqModel: state.groqModel,
       }),

@@ -14,15 +14,8 @@ const engineNames: Record<string, string> = {
     groq: "Groq"
 };
 
-const defaultModels: Record<string, string> = {
-    gemini: "gemini-2.5-flash",
-    chatgpt: "gpt-4o",
-    openrouter: "auto",
-    groq: "llama-3.1-70b-versatile"
-};
-
 export function ChatInterface() {
-  const { sessionMode, messages, aiEngine, openrouterModel, downloadUrl, setShowModal } = useCVStore();
+  const { sessionMode, messages, aiEngine, geminiModel, openaiModel, openrouterModel, groqModel, downloadUrl, setShowModal } = useCVStore();
   const { sendMessage } = useStreamingChat();
 
   // Register side-effect hooks
@@ -30,9 +23,13 @@ export function ChatInterface() {
 
   // Get display name for engine
   const engineName = aiEngine ? engineNames[aiEngine] : "Google Gemini";
-  const modelDisplay = aiEngine === "openrouter" && openrouterModel && openrouterModel !== "auto" 
-      ? openrouterModel 
-      : (aiEngine ? defaultModels[aiEngine] : defaultModels.gemini);
+  const modelByEngine: Record<string, string> = {
+    gemini: geminiModel,
+    chatgpt: openaiModel,
+    openrouter: openrouterModel,
+    groq: groqModel,
+  };
+  const modelDisplay = aiEngine ? modelByEngine[aiEngine] : geminiModel;
 
   // Define suggestion arrays for initial empty state
   const suggestions = messages.length === 0 && sessionMode
@@ -58,7 +55,7 @@ export function ChatInterface() {
             <span className="text-xs font-medium px-2 py-0.5 rounded bg-primary/10 text-primary">
                 {engineName}
             </span>
-            {aiEngine === "openrouter" && openrouterModel && openrouterModel !== "auto" && (
+            {modelDisplay && modelDisplay !== "auto" && (
                 <span className="text-[10px] text-muted-foreground">
                     • {modelDisplay}
                 </span>
