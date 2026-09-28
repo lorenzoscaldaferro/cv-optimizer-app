@@ -158,7 +158,14 @@ export function useStreamingChat() {
         });
 
         if (!res.ok || !res.body) {
-          throw new Error("Failed to connect to chat API");
+          let errDetail = "Error de conexión con el servidor";
+          try {
+            const errJson = await res.json();
+            if (errJson.error) errDetail = errJson.error;
+          } catch {
+            // response was not JSON
+          }
+          throw new Error(errDetail);
         }
 
         const reader = res.body.getReader();
@@ -202,10 +209,24 @@ export function useStreamingChat() {
         setStreamingContent("");
         const error = err as Error;
         console.error("Chat error:", error.message);
+
+        let userFeedback = "Lo siento, hubo un problema al procesar tu solicitud.";
+        if (error.message.includes("No se encontró configuración")) {
+          userFeedback = "⚠️ No se detectó una API Key configurada para este motor. Por favor ingresa tu API Key en la pantalla de bienvenida o selecciona Google Gemini.";
+        } else if (error.message.includes("API key not valid") || error.message.includes("API_KEY_INVALID")) {
+          userFeedback = "⚠️ La API Key ingresada no es válida. Por favor verifica tu clave.";
+        } else if (error.message.includes("503") || error.message.includes("demand")) {
+          userFeedback = "⚠️ El modelo está experimentando alta demanda temporal en el proveedor. Por favor reintenta en unos segundos.";
+        } else if (error.message.includes("429") || error.message.includes("quota")) {
+          userFeedback = "⚠️ Se ha alcanzado el límite de cuota para este modelo en tu cuenta.";
+        } else if (error.message && error.message !== "Error de conexión con el servidor") {
+          userFeedback = `⚠️ Error: ${error.message}`;
+        }
+
         const errorMessage: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "Lo siento, hubo un error al procesar tu mensaje. Por favor, intentá de nuevo.",
+          content: userFeedback,
           timestamp: new Date(),
         };
         addMessage(errorMessage);
