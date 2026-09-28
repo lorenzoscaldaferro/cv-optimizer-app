@@ -54,20 +54,44 @@ export class GeminiAdapter implements LLMAdapter {
         const lastMessage = conversationMessages[conversationMessages.length - 1];
         const lastContent = typeof lastMessage.content === "string" ? lastMessage.content : JSON.stringify(lastMessage.content);
 
-        const chat = model.startChat({ history });
-        const result = await chat.sendMessageStream(lastContent);
+        try {
+            const chat = model.startChat({ history });
+            const result = await chat.sendMessageStream(lastContent);
 
-        let fullContent = "";
-        for await (const chunk of result.stream) {
-            const text = chunk.text();
-            fullContent += text;
-            onChunk(text);
+            let fullContent = "";
+            for await (const chunk of result.stream) {
+                const text = chunk.text();
+                fullContent += text;
+                onChunk(text);
+            }
+
+            return {
+                content: fullContent,
+                model: this.modelName
+            };
+        } catch (streamError) {
+            const errStr = String(streamError);
+            if (errStr.includes("503") && this.modelName !== "gemini-2.5-flash") {
+                console.warn(`Model ${this.modelName} hit 503 demand spike, falling back to gemini-2.5-flash`);
+                const fallbackModel = this.client.getGenerativeModel({
+                    model: "gemini-2.5-flash",
+                    systemInstruction: systemMsg ? (typeof systemMsg.content === "string" ? systemMsg.content : JSON.stringify(systemMsg.content)) : undefined,
+                });
+                const fallbackChat = fallbackModel.startChat({ history });
+                const fallbackResult = await fallbackChat.sendMessageStream(lastContent);
+                let fallbackContent = "";
+                for await (const chunk of fallbackResult.stream) {
+                    const text = chunk.text();
+                    fallbackContent += text;
+                    onChunk(text);
+                }
+                return {
+                    content: fallbackContent,
+                    model: "gemini-2.5-flash"
+                };
+            }
+            throw streamError;
         }
-
-        return {
-            content: fullContent,
-            model: this.modelName
-        };
     }
 
     async test(): Promise<boolean> {
@@ -176,7 +200,7 @@ export class OpenAIAdapter implements LLMAdapter {
 
     async test(): Promise<boolean> {
         try {
-            const isReasoning = this.model.startsWith("o1") || this.model.startsWith("o3");
+            const isReasoning = this.model.startsWith("o1") || this.model.startsWith("o3") || this.model.includes("astra");
             const tokenParam = isReasoning
                 ? { max_completion_tokens: 10 }
                 : { max_tokens: 5 };
@@ -193,6 +217,23 @@ export class OpenAIAdapter implements LLMAdapter {
                     ...tokenParam
                 })
             });
+
+            if (!response.ok && response.status === 400) {
+                const fallbackResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${this.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: this.model,
+                        messages: [{ role: "user", content: "test" }],
+                        max_completion_tokens: 10
+                    })
+                });
+                return fallbackResponse.ok;
+            }
+
             return response.ok;
         } catch {
             return false;

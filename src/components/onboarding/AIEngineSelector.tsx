@@ -16,7 +16,7 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
         {
             id: "gemini" as const,
             name: "Google Gemini",
-            description: "Gemini 2.5 Flash, 3.1 Pro y Flash Lite vía Google AI Studio.",
+            description: "Gemini 3.8 Flash, 3.1 Pro y 2.5 Flash vía Google AI Studio.",
             icon: Zap,
             badge: "BYOK",
             costBadge: "GRATIS" as const,
@@ -24,7 +24,7 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
         {
             id: "chatgpt" as const,
             name: "OpenAI",
-            description: "GPT-4o, GPT-4o Mini, o3-mini y o1 vía OpenAI API.",
+            description: "GPT-6 Sol/Luna, GPT-5.6 y GPT-4o vía OpenAI API.",
             icon: ShieldCheck,
             badge: "BYOK",
             costBadge: "PAGO" as const,
@@ -32,7 +32,7 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
         {
             id: "openrouter" as const,
             name: "OpenRouter",
-            description: "Accede a Claude 3.5, Gemini, Llama 3.3 con una sola key.",
+            description: "Claude Opus 5.5, Gemini 3.8, GPT-6 y DeepSeek con una sola key.",
             icon: Globe,
             badge: "BYOK",
             costBadge: "FLEXIBLE" as const,
@@ -40,7 +40,7 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
         {
             id: "groq" as const,
             name: "Groq",
-            description: "Llama 3.3 70B y 8B Instant con velocidad de inferencia extrema.",
+            description: "Llama 3.3 70B, GPT-OSS y 8B Instant con velocidad de inferencia extrema.",
             icon: Cpu,
             badge: "BYOK",
             costBadge: "GRATIS" as const,

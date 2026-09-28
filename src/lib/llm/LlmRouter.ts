@@ -12,9 +12,9 @@ const providerBaseUrls: Record<Provider, string | null> = {
 };
 
 const defaultModels: Record<Provider, string> = {
-    gemini: "gemini-2.5-flash",
-    openai: "gpt-4o",
-    openrouter: "openai/gpt-4o-mini",
+    gemini: "gemini-3.8-flash",
+    openai: "gpt-6-sol",
+    openrouter: "google/gemini-3.8-flash",
     groq: "llama-3.3-70b-versatile"
 };
 
