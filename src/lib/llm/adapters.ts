@@ -19,12 +19,11 @@ export interface LLMAdapter {
 export class GeminiAdapter implements LLMAdapter {
     readonly id = "gemini";
     private client: GoogleGenerativeAI;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private model: any;
+    private modelName: string;
 
     constructor(apiKey: string, modelName: string = "gemini-2.5-flash") {
         this.client = new GoogleGenerativeAI(apiKey);
-        this.model = this.client.getGenerativeModel({ model: modelName });
+        this.modelName = modelName || "gemini-2.5-flash";
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,21 +32,30 @@ export class GeminiAdapter implements LLMAdapter {
         const systemMsg = messages.find(m => m.role === "system");
         const conversationMessages = messages.filter(m => m.role !== "system");
 
-        const history = conversationMessages.slice(0, -1).map(m => ({
+        if (conversationMessages.length === 0) {
+            throw new Error("No hay mensajes de conversación para procesar.");
+        }
+
+        const model = this.client.getGenerativeModel({
+            model: this.modelName,
+            systemInstruction: systemMsg ? (typeof systemMsg.content === "string" ? systemMsg.content : JSON.stringify(systemMsg.content)) : undefined,
+        });
+
+        // Gemini history MUST start with a 'user' turn and cannot contain 'system'
+        const rawHistory = conversationMessages.slice(0, -1);
+        const firstUserIdx = rawHistory.findIndex(m => m.role === "user");
+        const validHistory = firstUserIdx >= 0 ? rawHistory.slice(firstUserIdx) : [];
+
+        const history = validHistory.map(m => ({
             role: m.role === "user" ? "user" : "model",
-            parts: [{ text: typeof m.content === 'string' ? m.content : JSON.stringify(m.content) }]
+            parts: [{ text: typeof m.content === "string" ? m.content : JSON.stringify(m.content) }]
         }));
 
         const lastMessage = conversationMessages[conversationMessages.length - 1];
+        const lastContent = typeof lastMessage.content === "string" ? lastMessage.content : JSON.stringify(lastMessage.content);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const chatConfig: any = { history };
-        if (systemMsg) {
-            chatConfig.systemInstruction = { parts: [{ text: systemMsg.content }] };
-        }
-
-        const chat = this.model.startChat(chatConfig);
-        const result = await chat.sendMessageStream(lastMessage.content);
+        const chat = model.startChat({ history });
+        const result = await chat.sendMessageStream(lastContent);
 
         let fullContent = "";
         for await (const chunk of result.stream) {
@@ -58,16 +66,36 @@ export class GeminiAdapter implements LLMAdapter {
 
         return {
             content: fullContent,
-            model: this.model.model
+            model: this.modelName
         };
     }
 
     async test(): Promise<boolean> {
         try {
-            const result = await this.model.generateContent("test");
-            return !!result.response.text();
-        } catch (e) {
+            const model = this.client.getGenerativeModel({ model: this.modelName });
+            const result = await Promise.race([
+                model.generateContent({
+                    contents: [{ role: "user", parts: [{ text: "hi" }] }],
+                    generationConfig: { maxOutputTokens: 2 }
+                }),
+                new Promise<never>((_, reject) =>
+                    setTimeout(() => reject(new Error("Timeout al validar modelo")), 8000)
+                )
+            ]);
+            return !!result;
+        } catch (e: unknown) {
             console.error("Gemini test failed:", e);
+            const msg = e instanceof Error ? e.message : String(e);
+            if (msg.includes("API key not valid") || msg.includes("API_KEY_INVALID")) {
+                return false;
+            }
+            if (msg.includes("404") || msg.includes("not found")) {
+                return false;
+            }
+            // For temporary 503 high demand or 429 quota spikes, if the key is valid, do not reject valid keys
+            if (msg.includes("503") || msg.includes("429")) {
+                return true;
+            }
             return false;
         }
     }
@@ -85,6 +113,14 @@ export class OpenAIAdapter implements LLMAdapter {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async stream(messages: any[], onChunk: (text: string) => void): Promise<LLMResponse> {
+        const isReasoning = this.model.startsWith("o1") || this.model.startsWith("o3");
+        const formattedMessages = messages.map(m => {
+            if (isReasoning && m.role === "system") {
+                return { role: "developer", content: m.content };
+            }
+            return m;
+        });
+
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -93,7 +129,7 @@ export class OpenAIAdapter implements LLMAdapter {
             },
             body: JSON.stringify({
                 model: this.model,
-                messages,
+                messages: formattedMessages,
                 stream: true,
             })
         });
@@ -140,6 +176,11 @@ export class OpenAIAdapter implements LLMAdapter {
 
     async test(): Promise<boolean> {
         try {
+            const isReasoning = this.model.startsWith("o1") || this.model.startsWith("o3");
+            const tokenParam = isReasoning
+                ? { max_completion_tokens: 10 }
+                : { max_tokens: 5 };
+
             const response = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -149,7 +190,7 @@ export class OpenAIAdapter implements LLMAdapter {
                 body: JSON.stringify({
                     model: this.model,
                     messages: [{ role: "user", content: "test" }],
-                    max_tokens: 5
+                    ...tokenParam
                 })
             });
             return response.ok;

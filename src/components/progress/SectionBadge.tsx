@@ -16,33 +16,31 @@ export function SectionBadge({ section, index }: SectionBadgeProps) {
   return (
     <div className="flex items-center gap-3">
       <motion.div
-        className={`relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold
-          ${isDone ? "bg-accent text-accent-foreground" : ""}
-          ${isActive ? "bg-primary text-primary-foreground" : ""}
-          ${!isDone && !isActive ? "bg-white/5 text-muted-foreground border border-white/5" : ""}
+        className={`relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-mono font-medium transition-all
+          ${isDone ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" : ""}
+          ${isActive ? "bg-white text-black font-semibold shadow-sm" : ""}
+          ${!isDone && !isActive ? "bg-white/[0.04] text-zinc-500 border border-white/[0.08]" : ""}
         `}
-        animate={isActive ? { scale: [1, 1.1, 1] } : {}}
-        transition={{ duration: 1.5, repeat: Infinity }}
       >
         {isDone ? (
-          <Check className="h-3.5 w-3.5" strokeWidth={3} />
+          <Check className="h-3 w-3" strokeWidth={2.5} />
         ) : (
           <span>{index + 1}</span>
         )}
         {isActive && (
           <motion.div
-            className="absolute inset-0 rounded-full bg-primary/40"
-            animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            className="absolute -inset-0.5 rounded-full bg-white/20 -z-10"
+            animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
           />
         )}
       </motion.div>
 
       <span
-        className={`text-sm font-medium transition-colors font-sans
-          ${isDone ? "text-accent" : ""}
-          ${isActive ? "text-foreground font-semibold" : ""}
-          ${!isDone && !isActive ? "text-muted-foreground" : ""}
+        className={`text-xs font-sans transition-colors
+          ${isDone ? "text-zinc-300" : ""}
+          ${isActive ? "text-white font-medium" : ""}
+          ${!isDone && !isActive ? "text-zinc-500" : ""}
         `}
       >
         {section.label}

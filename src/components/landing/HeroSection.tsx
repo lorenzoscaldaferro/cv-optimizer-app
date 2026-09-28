@@ -19,37 +19,48 @@ export function HeroSection() {
       } else {
         setTitleNumber(titleNumber + 1);
       }
-    }, 2000);
+    }, 2400);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
 
   return (
-    <section className="relative flex flex-col items-center text-center px-4 py-32 max-w-4xl mx-auto overflow-hidden">
-      {/* Subtle Animated Background */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.03)_50%,transparent_100%)] bg-[length:200%_100%] animate-bg-pan pointer-events-none" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-64 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
+    <section className="relative flex flex-col items-center text-center px-4 pt-32 pb-24 max-w-4xl mx-auto">
+      {/* Vercel-style subtle top ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-b from-white/[0.07] via-white/[0.01] to-transparent rounded-full blur-[100px] pointer-events-none -z-10" />
 
+      {/* Top subtle announcement badge */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mb-8"
+      >
+        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono text-zinc-300 bg-white/[0.04] border border-white/[0.1] backdrop-blur-sm">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span>Gemini 2.5 / 3.1 & OpenAI • Modelos 2026</span>
+        </span>
+      </motion.div>
 
       <div className="flex flex-col items-center justify-center w-full">
         <motion.h1
-          className="text-5xl sm:text-7xl font-sans font-bold text-foreground leading-[1.1] tracking-tight mb-6 flex flex-col items-center justify-center"
+          className="text-4xl sm:text-6xl md:text-7xl font-sans font-bold text-foreground leading-[1.1] tracking-tight mb-6 flex flex-col items-center justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <span className="mb-2">Crea un CV que logra</span>
-          <span className="relative flex w-full justify-center overflow-hidden text-center h-[1.2em] pb-2">
+          <span className="text-zinc-100">Crea un CV que logra</span>
+          <span className="relative flex w-full justify-center overflow-hidden text-center h-[1.25em] text-white">
             {titles.map((title, index) => (
               <motion.span
                 key={index}
-                className="absolute font-semibold text-primary drop-shadow-sm"
+                className="absolute font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400"
                 initial={{ opacity: 0, y: "-100%" }}
-                transition={{ type: "spring", stiffness: 50 }}
+                transition={{ type: "spring", stiffness: 60, damping: 15 }}
                 animate={
                   titleNumber === index
                     ? { y: 0, opacity: 1 }
                     : {
-                      y: titleNumber > index ? "-150%" : "150%",
+                      y: titleNumber > index ? "-120%" : "120%",
                       opacity: 0,
                     }
                 }
@@ -62,42 +73,40 @@ export function HeroSection() {
       </div>
 
       <motion.p
-        className="text-lg sm:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed font-sans"
+        className="text-base sm:text-lg text-zinc-400 max-w-2xl mb-10 leading-relaxed font-sans"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.2, duration: 0.4 }}
       >
-        Una entrevista guiada por IA que convierte tu experiencia en un CV .docx optimizado
-        para ATS — sección por sección, punto por punto. Pensado para estudiantes y
-        profesionales junior.
+        Una entrevista guiada por IA que estructura tu experiencia punto por punto y genera un archivo .docx profesional optimizado para superar los filtros ATS.
       </motion.p>
 
       <motion.div
-        className="flex flex-col sm:flex-row gap-4"
+        className="flex flex-col sm:flex-row gap-3 items-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.3, duration: 0.4 }}
       >
         <Link
           href="/onboarding"
-          className="btn-primary group"
+          className="btn-primary group h-11 px-6 text-sm font-medium"
         >
           Comenzar Gratis
-          <ArrowRight className="h-4 w-4 ml-2 inline-block transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
         </Link>
       </motion.div>
 
       <motion.div
-        className="mt-12 flex items-center gap-6 text-sm text-foreground/70"
+        className="mt-14 flex flex-wrap justify-center items-center gap-6 text-xs text-zinc-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
+        transition={{ delay: 0.4, duration: 0.4 }}
       >
-        {["Optimizado para ATS", "Creación guiada", "Descarga instantánea"].map(
+        {["Formato ATS de una columna", "Entrevista paso a paso", "Exportación instantánea .docx", "BYOK seguro"].map(
           (item) => (
-            <span key={item} className="flex items-center gap-2 font-medium">
-              <CheckCircle2 className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
-              {item}
+            <span key={item} className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-zinc-400" strokeWidth={1.5} />
+              <span>{item}</span>
             </span>
           )
         )}

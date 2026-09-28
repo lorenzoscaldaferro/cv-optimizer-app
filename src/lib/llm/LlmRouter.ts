@@ -127,7 +127,8 @@ export class LlmRouter {
         console.log("Adapter test result:", isValid);
 
         if (!isValid) {
-            throw new Error(`La clave de ${provider} no es válida o no tiene permisos.`);
+            const activeModel = model || defaultModels[provider];
+            throw new Error(`No se pudo validar la conexión con ${provider} (modelo: ${activeModel}). Verifica que la API key sea correcta y que tu cuenta tenga acceso y cuota.`);
         }
 
         // 2. Try to save to DB if available

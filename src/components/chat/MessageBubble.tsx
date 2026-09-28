@@ -29,15 +29,15 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   return (
     <motion.div
       className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.15 }}
     >
       <div
-        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed font-sans shadow-sm border border-white/5
+        className={`max-w-[85%] rounded-xl px-4 py-3 text-sm leading-relaxed font-sans shadow-sm
           ${isUser
-            ? "bg-foreground text-background rounded-br-sm"
-            : "bg-card text-foreground rounded-bl-sm"
+            ? "bg-white text-black font-medium rounded-br-sm"
+            : "bg-zinc-950/70 text-zinc-100 rounded-bl-sm border border-white/[0.08]"
           }
         `}
       >
@@ -47,7 +47,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed font-sans">{children}</p>,
+              p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed font-sans text-zinc-200">{children}</p>,
               ul: ({ children }) => (
                 <ul className="mb-2 list-disc pl-4 space-y-0.5">{children}</ul>
               ),
@@ -56,35 +56,35 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                   {children}
                 </ol>
               ),
-              li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
+              li: ({ children }) => <li className="text-zinc-300">{children}</li>,
               strong: ({ children }) => (
-                <strong className="font-semibold text-foreground tracking-wide">
+                <strong className="font-semibold text-white tracking-tight">
                   {children}
                 </strong>
               ),
               h2: ({ children }) => (
-                <h2 className="text-base font-heading font-semibold text-foreground mt-3 mb-1">
+                <h2 className="text-sm font-semibold text-white mt-3 mb-1 tracking-tight">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="text-sm font-heading font-semibold text-foreground mt-2 mb-1">
+                <h3 className="text-xs font-semibold text-zinc-200 mt-2 mb-1 uppercase tracking-wider">
                   {children}
                 </h3>
               ),
               code: ({ children }) => (
-                <code className="rounded bg-secondary/50 px-1 py-0.5 text-xs font-mono text-primary border border-white/5">
+                <code className="rounded bg-white/[0.05] px-1.5 py-0.5 text-xs font-mono text-zinc-200 border border-white/[0.08]">
                   {children}
                 </code>
               ),
               pre: ({ children }) => (
-                <pre className="overflow-x-auto rounded-lg bg-secondary p-3 text-xs font-mono text-muted-foreground my-2 border border-white/5 shadow-inner">
+                <pre className="overflow-x-auto rounded-lg bg-black/60 p-3 text-xs font-mono text-zinc-300 my-2 border border-white/[0.08]">
                   {children}
                 </pre>
               ),
-              hr: () => <hr className="border-border/50 my-3" />,
+              hr: () => <hr className="border-white/[0.08] my-3" />,
               blockquote: ({ children }) => (
-                <blockquote className="border-l-2 border-primary pl-3 text-muted-foreground italic my-2">
+                <blockquote className="border-l border-white/30 pl-3 text-zinc-400 italic my-2">
                   {children}
                 </blockquote>
               ),

@@ -7,6 +7,11 @@ const nextConfig = {
     }
     return config;
   },
+  experimental: {
+    outputFileTracingIncludes: {
+      "/api/**/*": ["./scripts/**/*"],
+    },
+  },
   async headers() {
     return [
       {

@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const poppins = Poppins({
-  weight: ["400", "500", "600", "700", "800"],
-  subsets: ["latin"],
-  variable: "--font-poppins"
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+});
+
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
-  title: "CV Optimizer — Build ATS-Optimized CVs with AI",
+  title: "CV Optimizer — Entrevista con IA para CVs de Alto Impacto",
   description:
-    "A guided AI interview that builds your ATS-optimized CV section by section and delivers a .docx file.",
+    "Crea o audita tu currículum punto por punto con los últimos modelos de IA y descarga un archivo .docx profesional optimizado para ATS.",
 };
 
 export default function RootLayout({
@@ -21,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${inter.variable} ${poppins.variable}`}>
-      <body className="font-sans antialiased bg-background text-foreground">
+    <html lang="es" className={`dark ${geistSans.variable} ${geistMono.variable}`}>
+      <body className="font-sans antialiased bg-background text-foreground selection:bg-white/20 selection:text-white">
         {children}
       </body>
     </html>

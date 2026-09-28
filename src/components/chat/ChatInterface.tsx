@@ -49,24 +49,26 @@ export function ChatInterface() {
   return (
     <div className="flex flex-col h-full">
       {/* Engine indicator header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-card/30">
-        <span className="text-xs text-muted-foreground">Usando:</span>
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.08] bg-zinc-950/40 backdrop-blur-sm">
         <div className="flex items-center gap-2">
-            <span className="text-xs font-medium px-2 py-0.5 rounded bg-primary/10 text-primary">
+            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">Motor</span>
+            <span className="text-xs font-sans font-medium px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/[0.08] text-zinc-200">
                 {engineName}
             </span>
             {modelDisplay && modelDisplay !== "auto" && (
-                <span className="text-[10px] text-muted-foreground">
-                    • {modelDisplay}
+                <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.06]">
+                    {modelDisplay}
                 </span>
             )}
+        </div>
+        <div className="flex items-center gap-2">
             {downloadUrl && (
               <button
                 onClick={() => setShowModal(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 border border-primary/20 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white text-black text-xs font-medium hover:bg-neutral-200 transition-all shadow-sm active:scale-[0.98] cursor-pointer"
               >
-                <Download className="h-3 w-3" />
-                CV listo
+                <Download className="h-3.5 w-3.5" />
+                <span>Descargar .docx</span>
               </button>
             )}
         </div>

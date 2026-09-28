@@ -65,31 +65,28 @@ export function ModeSelector() {
               <motion.button
                 key={mode.id}
                 onClick={mode.action}
-                className={`w-full text-left rounded-xl border p-5 transition-all duration-300 relative group overflow-hidden
+                className={`w-full text-left rounded-xl border p-5 transition-all duration-150 relative group overflow-hidden
                   ${selected === mode.id
-                    ? "border-muted bg-card/90 shadow-[0_4px_20px_-5px_rgba(255,255,255,0.05)]"
-                    : "border-white/5 bg-card/50 hover:border-white/10 hover:bg-card/80"
+                    ? "border-white/30 bg-zinc-900/80 ring-1 ring-white/10"
+                    : "border-white/[0.08] bg-zinc-950/40 hover:border-white/[0.18] hover:bg-zinc-900/40"
                   }
                 `}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.08, duration: 0.2 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 <div className="flex items-start gap-4 relative z-10">
                   <div
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg shadow-sm ring-1 transition-all
-                      ${selected === mode.id || mode.accent === "primary" ? "ring-white/10 bg-foreground/5 text-foreground" : "ring-white/5 bg-background text-muted-foreground group-hover:text-foreground"}
-                    `}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.08] text-zinc-300 group-hover:text-white group-hover:border-white/20 transition-all"
                   >
                     {mode.icon}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="font-heading font-semibold text-foreground tracking-wide">{mode.title}</p>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground shrink-0 transition-colors" />
+                      <p className="font-sans font-medium text-sm text-zinc-100 tracking-tight">{mode.title}</p>
+                      <ArrowRight className="h-4 w-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 shrink-0 transition-all" />
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed font-sans">
+                    <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed font-sans">
                       {mode.description}
                     </p>
                   </div>

@@ -16,15 +16,15 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
         {
             id: "gemini" as const,
             name: "Google Gemini",
-            description: "Ingresá tu API Key para usar Gemini.",
+            description: "Gemini 2.5 Flash, 3.1 Pro y Flash Lite vía Google AI Studio.",
             icon: Zap,
             badge: "BYOK",
-            costBadge: "FREE" as const,
+            costBadge: "GRATIS" as const,
         },
         {
             id: "chatgpt" as const,
             name: "OpenAI",
-            description: "Ingresá tu API Key para usar GPT-4.",
+            description: "GPT-4o, GPT-4o Mini, o3-mini y o1 vía OpenAI API.",
             icon: ShieldCheck,
             badge: "BYOK",
             costBadge: "PAGO" as const,
@@ -32,23 +32,23 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
         {
             id: "openrouter" as const,
             name: "OpenRouter",
-            description: "Accedé a múltiples modelos con una sola API Key.",
+            description: "Accede a Claude 3.5, Gemini, Llama 3.3 con una sola key.",
             icon: Globe,
             badge: "BYOK",
-            costBadge: "FREE" as const,
+            costBadge: "FLEXIBLE" as const,
         },
         {
             id: "groq" as const,
             name: "Groq",
-            description: "Ingresá tu API Key para inferencia ultrarrápida.",
+            description: "Llama 3.3 70B y 8B Instant con velocidad de inferencia extrema.",
             icon: Cpu,
             badge: "BYOK",
-            costBadge: "FREE" as const,
+            costBadge: "GRATIS" as const,
         },
     ];
 
     return (
-        <div className="grid gap-4 w-full">
+        <div className="grid gap-3 w-full">
             {engines.map((engine) => {
                 const Icon = engine.icon;
                 const isSelected = aiEngine === engine.id;
@@ -58,43 +58,41 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
                         key={engine.id}
                         onClick={() => onSelect(engine.id)}
                         className={`
-              group relative flex items-start gap-4 p-5 rounded-2xl text-left transition-all duration-300
-              border-2 ${isSelected
-                                ? "bg-card border-primary/50 shadow-[0_0_20px_rgba(6,182,212,0.15)]"
-                                : "bg-card/50 border-white/5 hover:border-white/10 hover:bg-card shadow-sm"
+              group relative flex items-start gap-3.5 p-4 rounded-xl text-left transition-all duration-150
+              border ${isSelected
+                                ? "bg-zinc-900/80 border-white/40 ring-1 ring-white/20 shadow-sm"
+                                : "bg-zinc-950/40 border-white/[0.08] hover:border-white/[0.18] hover:bg-zinc-900/40"
                             }
             `}
                     >
                         <div className={`
-              flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-colors
-              ${isSelected ? "bg-primary/20 text-primary" : "bg-white/5 text-muted-foreground group-hover:text-foreground"}
+              flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors border
+              ${isSelected ? "bg-white text-black border-white" : "bg-white/[0.04] text-zinc-300 border-white/[0.08] group-hover:text-white"}
             `}>
-                            <Icon className="h-6 w-6" strokeWidth={1.5} />
+                            <Icon className="h-5 w-5" strokeWidth={1.5} />
                         </div>
 
                         <div className="flex-1 min-w-0 pr-4">
                             <div className="flex items-center gap-2 mb-1">
-                                <h3 className={`font-semibold transition-colors ${isSelected ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"}`}>
+                                <h3 className="font-sans font-medium text-sm text-zinc-100">
                                     {engine.name}
                                 </h3>
                                 {engine.badge && (
-                                    <span className={`
-                    text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-sm
-                    ${isSelected ? "bg-primary/20 text-primary" : "bg-white/10 text-muted-foreground"}
-                  `}>
+                                    <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
                                         {engine.badge}
                                     </span>
                                 )}
                                 {engine.costBadge && (
-                                    <span className={`
-                    text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-sm
-                    ${engine.costBadge === "FREE" ? "bg-green-500/20 text-green-400" : "bg-orange-500/20 text-orange-400"}
-                  `}>
+                                    <span className={`text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border ${
+                                        engine.costBadge === "GRATIS" 
+                                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                                          : "bg-white/[0.04] text-zinc-400 border-white/[0.08]"
+                                    }`}>
                                         {engine.costBadge}
                                     </span>
                                 )}
                             </div>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
+                            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
                                 {engine.description}
                             </p>
                         </div>
@@ -102,11 +100,11 @@ export function AIEngineSelector({ onSelect }: AIEngineSelectorProps) {
                         {isSelected && (
                             <motion.div
                                 layoutId="engine-check"
-                                className="absolute top-5 right-5 h-5 w-5 rounded-full bg-primary flex items-center justify-center shadow-lg"
+                                className="absolute top-4 right-4 h-4 w-4 rounded-full bg-white flex items-center justify-center"
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                             >
-                                <div className="h-2 w-2 rounded-full bg-black" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-black" />
                             </motion.div>
                         )}
                     </button>

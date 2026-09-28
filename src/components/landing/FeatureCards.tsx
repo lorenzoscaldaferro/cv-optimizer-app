@@ -32,21 +32,23 @@ const features = [
 
 export function FeatureCards() {
   return (
-    <section className="px-4 pb-20 max-w-4xl mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <section className="px-4 pb-28 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         {features.map((feature, i) => (
           <motion.div
             key={feature.title}
-            className="card flex flex-col items-start bg-card/50 hover:bg-card border-white/5 group"
-            initial={{ opacity: 0, y: 20 }}
+            className="flex flex-col items-start p-6 rounded-xl bg-zinc-950/40 border border-white/[0.08] hover:border-white/[0.18] transition-all duration-200 group"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 + i * 0.1 }}
+            transition={{ delay: 0.35 + i * 0.08, duration: 0.3 }}
           >
-            <div className="mb-4 p-2.5 bg-background rounded-lg border border-white/5 shadow-sm group-hover:scale-110 transition-transform duration-300">
+            <div className="mb-4 p-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-zinc-300 group-hover:text-white transition-colors">
               {feature.icon}
             </div>
-            <h3 className="font-heading font-semibold text-foreground mb-1 tracking-wide">{feature.title}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed font-sans">
+            <h3 className="font-sans font-semibold text-sm text-zinc-100 mb-1.5 tracking-tight">
+              {feature.title}
+            </h3>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
               {feature.description}
             </p>
           </motion.div>

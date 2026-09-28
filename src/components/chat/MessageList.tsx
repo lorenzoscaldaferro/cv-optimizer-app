@@ -34,10 +34,10 @@ export function MessageList() {
       {isStreaming && streamingContent && (
         <motion.div
           className="flex justify-start"
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-card px-4 py-3 text-sm text-foreground leading-relaxed font-sans shadow-sm border border-white/5">
+          <div className="max-w-[85%] rounded-xl bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 leading-relaxed font-sans border border-white/[0.08] shadow-sm">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -53,10 +53,10 @@ export function MessageList() {
                   </ol>
                 ),
                 li: ({ children }) => (
-                  <li className="text-muted-foreground">{children}</li>
+                  <li className="text-zinc-300">{children}</li>
                 ),
                 strong: ({ children }) => (
-                  <strong className="font-heading font-semibold text-foreground tracking-wide">
+                  <strong className="font-semibold text-white tracking-tight">
                     {children}
                   </strong>
                 ),
@@ -64,7 +64,7 @@ export function MessageList() {
             >
               {cleanStreaming(streamingContent)}
             </ReactMarkdown>
-            <span className="inline-block h-4 w-0.5 bg-primary animate-pulse ml-0.5 align-text-bottom drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+            <span className="inline-block h-4 w-0.5 bg-white animate-pulse ml-1 align-text-bottom" />
           </div>
         </motion.div>
       )}
@@ -72,13 +72,13 @@ export function MessageList() {
       {/* Typing indicator (before first token arrives) */}
       {isStreaming && !streamingContent && (
         <div className="flex justify-start">
-          <div className="rounded-2xl rounded-bl-sm bg-card border border-white/5 shadow-sm px-4 py-3">
-            <div className="flex gap-1 items-center h-4">
+          <div className="rounded-xl bg-zinc-950/70 border border-white/[0.08] px-4 py-3">
+            <div className="flex gap-1.5 items-center h-4">
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
-                  className="h-1.5 w-1.5 rounded-full bg-primary/60"
-                  animate={{ y: [0, -4, 0] }}
+                  className="h-1.5 w-1.5 rounded-full bg-zinc-400"
+                  animate={{ y: [0, -3, 0] }}
                   transition={{
                     duration: 0.6,
                     repeat: Infinity,

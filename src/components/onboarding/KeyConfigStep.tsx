@@ -19,10 +19,11 @@ const providerConfig: Record<AIEngine, { name: string; keyUrl: string; placehold
         placeholder: "AIza...",
         defaultModel: "gemini-2.5-flash",
         modelOptions: [
-            { value: "gemini-2.5-flash", label: "Gemini 2.5 Flash (Recomendado)" },
-            { value: "gemini-2.0-flash", label: "Gemini 2.0 Flash" },
-            { value: "gemini-1.5-pro", label: "Gemini 1.5 Pro" },
-            { value: "gemini-1.5-flash", label: "Gemini 1.5 Flash" },
+            { value: "gemini-2.5-flash", label: "Gemini 2.5 Flash (Recomendado — Rápido y Estable)" },
+            { value: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro (Mayor Razonamiento)" },
+            { value: "gemini-3.1-flash-lite", label: "Gemini 3.1 Flash Lite (Baja Latencia)" },
+            { value: "gemini-2.5-pro", label: "Gemini 2.5 Pro (Avanzado)" },
+            { value: "gemini-flash-latest", label: "Gemini Flash Latest" },
             { value: "custom", label: "Personalizado" },
         ]
     },
@@ -33,9 +34,9 @@ const providerConfig: Record<AIEngine, { name: string; keyUrl: string; placehold
         defaultModel: "gpt-4o",
         modelOptions: [
             { value: "gpt-4o", label: "GPT-4o (Recomendado)" },
-            { value: "gpt-4o-mini", label: "GPT-4o Mini" },
-            { value: "gpt-4-turbo", label: "GPT-4 Turbo" },
-            { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
+            { value: "gpt-4o-mini", label: "GPT-4o Mini (Económico y Rápido)" },
+            { value: "o3-mini", label: "o3-mini (Razonamiento)" },
+            { value: "o1", label: "o1 (Razonamiento Completo)" },
             { value: "custom", label: "Personalizado" },
         ]
     },
@@ -46,8 +47,10 @@ const providerConfig: Record<AIEngine, { name: string; keyUrl: string; placehold
         defaultModel: "openai/gpt-4o-mini",
         modelOptions: [
             { value: "openai/gpt-4o-mini", label: "GPT-4o Mini (Recomendado)" },
-            { value: "openai/gpt-4o", label: "GPT-4o" },
-            { value: "auto", label: "Auto" },
+            { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+            { value: "anthropic/claude-3.5-sonnet", label: "Claude 3.5 Sonnet" },
+            { value: "meta-llama/llama-3.3-70b-instruct", label: "Llama 3.3 70B" },
+            { value: "auto", label: "Auto (Mejor balance)" },
             { value: "custom", label: "Personalizado" },
         ]
     },
@@ -58,7 +61,7 @@ const providerConfig: Record<AIEngine, { name: string; keyUrl: string; placehold
         defaultModel: "llama-3.3-70b-versatile",
         modelOptions: [
             { value: "llama-3.3-70b-versatile", label: "Llama 3.3 70B (Recomendado)" },
-            { value: "llama-3.1-70b-versatile", label: "Llama 3.1 70B" },
+            { value: "llama-3.1-8b-instant", label: "Llama 3.1 8B Instant (Ultra-rápido)" },
             { value: "mixtral-8x7b-32768", label: "Mixtral 8x7B" },
             { value: "gemma2-9b-it", label: "Gemma 2 9B" },
             { value: "custom", label: "Personalizado" },
@@ -125,20 +128,20 @@ export function KeyConfigStep({ engine, onSuccess, onBack }: KeyConfigStepProps)
 
     return (
         <div className="w-full space-y-6">
-            <div className="bg-card/50 border border-white/5 rounded-2xl p-6 relative overflow-hidden">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                        <Key className="h-5 w-5" />
+            <div className="bg-zinc-950/60 border border-white/[0.08] rounded-xl p-6 relative overflow-hidden">
+                <div className="flex items-center gap-3 mb-5">
+                    <div className="h-9 w-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-zinc-200">
+                        <Key className="h-4 w-4" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-foreground">Configurar {config.name}</h3>
-                        <p className="text-xs text-muted-foreground">Tu llave se cifrará de forma segura en el servidor.</p>
+                        <h3 className="font-sans font-medium text-sm text-zinc-100">Configurar {config.name}</h3>
+                        <p className="text-xs text-zinc-400">Tu clave se valida en tiempo real y se mantiene segura en tu sesión.</p>
                     </div>
                 </div>
 
                 <div className="space-y-4">
                     <div>
-                        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 block">
+                        <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider mb-1.5 block">
                             API Key
                         </label>
                         <input
@@ -146,12 +149,12 @@ export function KeyConfigStep({ engine, onSuccess, onBack }: KeyConfigStepProps)
                             value={key}
                             onChange={(e) => setKey(e.target.value)}
                             placeholder={config.placeholder}
-                            className="w-full bg-background border border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                            className="w-full bg-zinc-900/60 border border-white/10 rounded-lg px-3.5 py-2.5 text-xs font-mono text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all"
                         />
                     </div>
 
                     <div>
-                        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 block">
+                        <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider mb-1.5 block">
                             Modelo
                         </label>
                         <div className="flex gap-2">
@@ -161,7 +164,7 @@ export function KeyConfigStep({ engine, onSuccess, onBack }: KeyConfigStepProps)
                                     if (e.target.value === "custom") setModel("");
                                     else setModel(e.target.value);
                                 }}
-                                className="bg-background border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                className="bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-white/30 transition-all flex-1"
                             >
                                 {config.modelOptions.map(opt => (
                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -173,41 +176,41 @@ export function KeyConfigStep({ engine, onSuccess, onBack }: KeyConfigStepProps)
                                     value={model}
                                     onChange={(e) => setModel(e.target.value)}
                                     placeholder="ej: nombre-del-modelo"
-                                    className="flex-1 bg-background border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                    className="flex-1 bg-zinc-900/60 border border-white/10 rounded-lg px-3 py-2 text-xs font-mono text-zinc-100 focus:outline-none focus:border-white/30 transition-all"
                                 />
                             )}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            {model ? `Usando: ${model}` : "Ingresá el nombre del modelo"}
+                        <p className="text-[11px] font-mono text-zinc-500 mt-1.5">
+                            {model ? `Activo: ${model}` : "Ingresá el identificador del modelo"}
                         </p>
                     </div>
 
                     {error && (
                         <motion.div
-                            initial={{ opacity: 0, y: -10 }}
+                            initial={{ opacity: 0, y: -6 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs"
+                            className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs"
                         >
-                            <AlertCircle className="h-4 w-4 shrink-0" />
+                            <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                             <span>{error}</span>
                         </motion.div>
                     )}
 
-                    <div className="flex flex-col gap-3 pt-2">
+                    <div className="flex flex-col gap-2 pt-2">
                         <button
                             onClick={handleSave}
                             disabled={isLoading || !key.trim()}
-                            className="w-full py-3 rounded-xl bg-foreground text-background font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="w-full py-2.5 rounded-lg bg-white text-black font-medium text-sm hover:bg-neutral-200 transition-all disabled:opacity-40 flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer"
                         >
                             {isLoading ? (
                                 <>
                                     <Loader2 className="h-4 w-4 animate-spin" />
-                                    Validando...
+                                    <span>Validando conexión...</span>
                                 </>
                             ) : (
                                 <>
                                     <ShieldCheck className="h-4 w-4" />
-                                    Validar y Continuar
+                                    <span>Validar y Continuar</span>
                                 </>
                             )}
                         </button>
@@ -215,7 +218,7 @@ export function KeyConfigStep({ engine, onSuccess, onBack }: KeyConfigStepProps)
                         <button
                             onClick={onBack}
                             disabled={isLoading}
-                            className="w-full py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            className="w-full py-1.5 text-xs text-zinc-400 hover:text-zinc-200 transition-colors"
                         >
                             Volver a selección
                         </button>
@@ -223,10 +226,10 @@ export function KeyConfigStep({ engine, onSuccess, onBack }: KeyConfigStepProps)
                 </div>
             </div>
 
-            <p className="text-center text-xs text-muted-foreground">
-                ¿No tenés una llave? Conseguila en el{" "}
-                <a href={config.keyUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                    Portal de Desarrolladores de {config.name}
+            <p className="text-center text-xs text-zinc-500">
+                ¿No tenés una API Key? Conseguila en el{" "}
+                <a href={config.keyUrl} target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:underline">
+                    Portal de {config.name}
                 </a>.
             </p>
         </div>

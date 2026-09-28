@@ -3,73 +3,46 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* Forcing dark mode variables onto the root to ensure a pure dark aesthetic globally */
-    --background: 0 0% 4%;
-    /* #0A0A0A */
-    --foreground: 0 0% 100%;
-    /* Pure White */
+  :root,
+  .dark {
+    /* Apple / Vercel pure minimalist dark aesthetic */
+    --background: 0 0% 0%;
+    /* #000000 */
+    --foreground: 0 0% 98%;
+    /* #FAFAFA */
 
-    --card: 0 0% 10%;
-    /* #1A1A1A */
-    --card-foreground: 0 0% 100%;
+    --card: 240 4% 6%;
+    /* #0e0e11 */
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 240 4% 6%;
+    --popover-foreground: 0 0% 98%;
 
-    /* Retaining Cyan as primary but subtly adjusting if needed, matching developer tools */
-    --primary: 189 94% 43%;
-    /* #06B6D4 cyan-500 */
-    --primary-foreground: 0 0% 4%;
-    /* #0A0A0A */
+    /* Crisp monochrome primary */
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 0%;
 
-    /* Subtle Grey */
-    --secondary: 0 0% 15%;
-    /* #262626 */
-    --secondary-foreground: 0 0% 100%;
+    /* Subtle Slate/Zinc */
+    --secondary: 240 4% 12%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-    /* Soft grey text */
+    --muted: 240 4% 12%;
+    --muted-foreground: 240 5% 65%;
+    /* #A1A1AA zinc-400 */
 
-    /* Neon Emerald Accent */
-    --accent: 142 71% 45%;
-    /* #22C55E emerald-500 */
-    --accent-foreground: 0 0% 100%;
+    /* Subtle active accent */
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 20%;
-    /* #333333 */
-    --input: 0 0% 15%;
-    --ring: 0 0% 50%;
-    /* Neutral ring */
+    --border: 240 4% 15%;
+    /* #26262b */
+    --input: 240 4% 15%;
+    --ring: 0 0% 90%;
 
     --radius: 0.5rem;
-  }
-
-  .dark {
-    /* Identical to root */
-    --background: 0 0% 4%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 189 94% 43%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 142 71% 45%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 50%;
   }
 
   * {
@@ -77,86 +50,28 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
+    letter-spacing: -0.011em;
   }
 }
 
 @layer components {
-
-  /* Framer-style Animations */
-  @keyframes background-pan {
-    from {
-      background-position: 0% center;
-    }
-
-    to {
-      background-position: -200% center;
-    }
-  }
-
-  .animate-bg-pan {
-    animation: background-pan 10s linear infinite;
-  }
-
-  @keyframes border-beam {
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  /* Button Classes */
+  /* Clean Apple / Vercel style buttons */
   .btn-primary {
-    @apply relative overflow-hidden bg-foreground text-background px-6 py-3 rounded-lg font-sans font-medium transition-all duration-300 cursor-pointer;
-  }
-
-  .btn-primary::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(0, 0, 0, 0.1),
-        transparent);
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
-  }
-
-  .btn-primary:hover {
-    @apply bg-foreground/90;
-    box-shadow: 0 0 20px -5px rgba(255, 255, 255, 0.3);
-  }
-
-  .btn-primary:hover::before {
-    animation: border-beam 1.5s infinite;
+    @apply inline-flex items-center justify-center bg-white text-black px-5 py-2.5 rounded-lg font-sans font-medium text-sm transition-all duration-150 cursor-pointer hover:bg-neutral-200 active:scale-[0.99] shadow-[0_1px_2px_rgba(0,0,0,0.5)];
   }
 
   .btn-secondary {
-    @apply bg-transparent text-foreground border border-border px-6 py-3 rounded-lg font-sans font-medium transition-all duration-300 cursor-pointer;
+    @apply inline-flex items-center justify-center bg-white/[0.04] text-foreground border border-white/10 px-5 py-2.5 rounded-lg font-sans font-medium text-sm transition-all duration-150 cursor-pointer hover:bg-white/[0.08] hover:border-white/20 active:scale-[0.99];
   }
 
-  .btn-secondary:hover {
-    @apply bg-secondary border-muted text-foreground;
-  }
-
-  /* Card Class */
+  /* Refined Card Class */
   .card {
-    @apply bg-card rounded-xl p-6 transition-all duration-500 border border-border;
+    @apply bg-white/[0.02] rounded-xl p-6 transition-all duration-200 border border-white/[0.08] hover:border-white/[0.16] hover:bg-white/[0.04];
   }
 
-  .card:hover {
-    @apply border-muted bg-card/80;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Input Class */
+  /* Minimal Input Class */
   .input {
-    @apply px-4 py-3 bg-secondary/30 border border-border rounded-lg text-base transition-all duration-300 w-full text-foreground placeholder:text-muted-foreground;
-  }
-
-  .input:focus {
-    @apply border-muted outline-none ring-1 ring-muted/50 bg-secondary/50;
+    @apply px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-lg text-sm transition-all duration-150 w-full text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20;
   }
 }

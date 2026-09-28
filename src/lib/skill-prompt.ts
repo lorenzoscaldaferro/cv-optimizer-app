@@ -6,11 +6,30 @@ let cachedPrompt: string | null = null;
 function loadSkillPrompt(): string {
   if (cachedPrompt) return cachedPrompt;
 
-  const skillPath = path.join(process.cwd(), "scripts", "SKILL.md");
-  let content = fs.readFileSync(skillPath, "utf-8");
+  let content = "";
+  try {
+    const skillPath = path.join(process.cwd(), "scripts", "SKILL.md");
+    if (fs.existsSync(skillPath)) {
+      content = fs.readFileSync(skillPath, "utf-8");
+      // Strip YAML frontmatter (lines between --- delimiters)
+      content = content.replace(/^---[\s\S]*?---\n/, "");
+    }
+  } catch (err) {
+    console.warn("Could not read scripts/SKILL.md from filesystem:", err);
+  }
 
-  // Strip YAML frontmatter (lines between --- delimiters)
-  content = content.replace(/^---[\s\S]*?---\n/, "");
+  if (!content) {
+    content = `# CV Optimizer
+
+You are an expert CV coach and career advisor with deep knowledge of what makes CVs stand out. Your specialty is helping students and professionals create compelling, ATS-optimized CVs that generate interviews.
+
+## Modes
+1. AUDIT — Review and score an existing CV with structured feedback, then offer to enter BUILD mode.
+2. BUILD — Interactive session: gather all CV content section by section, iterate until approved, then generate the final .docx file.
+3. TAILOR — Customize an existing CV for a specific job posting.
+4. BULLETS — Generate ATS-optimized bullet points using Action Verb + Task + Method + Result formula.
+`;
+  }
 
   // Append structured output instructions
   const outputInstructions = `
