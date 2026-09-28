@@ -41,11 +41,6 @@ export class GeminiAdapter implements LLMAdapter {
             throw new Error("No hay mensajes de conversación para procesar.");
         }
 
-        const model = this.client.getGenerativeModel({
-            model: this.modelName,
-            systemInstruction: systemMsg ? (typeof systemMsg.content === "string" ? systemMsg.content : JSON.stringify(systemMsg.content)) : undefined,
-        });
-
         // Gemini history MUST start with a 'user' turn and cannot contain 'system'
         const rawHistory = conversationMessages.slice(0, -1);
         const firstUserIdx = rawHistory.findIndex(m => m.role === "user");
@@ -59,45 +54,44 @@ export class GeminiAdapter implements LLMAdapter {
         const lastMessage = conversationMessages[conversationMessages.length - 1];
         const lastContent = typeof lastMessage.content === "string" ? lastMessage.content : JSON.stringify(lastMessage.content);
 
-        try {
-            const chat = model.startChat({ history });
-            const result = await chat.sendMessageStream(lastContent);
+        const candidateModels = Array.from(
+            new Set([this.modelName, "gemini-3.8-flash", "gemini-3.5-flash", "gemini-flash-latest"])
+        );
 
-            let fullContent = "";
-            for await (const chunk of result.stream) {
-                const text = chunk.text();
-                fullContent += text;
-                onChunk(text);
-            }
-
-            return {
-                content: fullContent,
-                model: this.modelName
-            };
-        } catch (streamError) {
-            const errStr = String(streamError);
-            // If temporary 503 spike or 404 on preview model, fallback to gemini-3.5-flash
-            if ((errStr.includes("503") || errStr.includes("404")) && this.modelName !== "gemini-3.5-flash") {
-                console.warn(`Model ${this.modelName} hit spike or deprecation (${errStr.slice(0, 100)}), falling back to gemini-3.5-flash`);
-                const fallbackModel = this.client.getGenerativeModel({
-                    model: "gemini-3.5-flash",
+        let lastErr: unknown;
+        for (const targetModel of candidateModels) {
+            try {
+                const model = this.client.getGenerativeModel({
+                    model: targetModel,
                     systemInstruction: systemMsg ? (typeof systemMsg.content === "string" ? systemMsg.content : JSON.stringify(systemMsg.content)) : undefined,
                 });
-                const fallbackChat = fallbackModel.startChat({ history });
-                const fallbackResult = await fallbackChat.sendMessageStream(lastContent);
-                let fallbackContent = "";
-                for await (const chunk of fallbackResult.stream) {
+                const chat = model.startChat({ history });
+                const result = await chat.sendMessageStream(lastContent);
+
+                let fullContent = "";
+                for await (const chunk of result.stream) {
                     const text = chunk.text();
-                    fallbackContent += text;
+                    fullContent += text;
                     onChunk(text);
                 }
+
                 return {
-                    content: fallbackContent,
-                    model: "gemini-3.5-flash"
+                    content: fullContent,
+                    model: targetModel
                 };
+            } catch (err) {
+                lastErr = err;
+                const errStr = String(err);
+                if (errStr.includes("503") || errStr.includes("404")) {
+                    console.warn(`Model ${targetModel} unavailable (${errStr.slice(0, 80)}), trying fallback model...`);
+                    await new Promise((r) => setTimeout(r, 500));
+                    continue;
+                }
+                throw err;
             }
-            throw streamError;
         }
+
+        throw lastErr;
     }
 
     async test(): Promise<boolean> {
