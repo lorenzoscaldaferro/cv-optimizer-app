@@ -131,11 +131,10 @@ export class LlmRouter {
             throw new Error(`No se pudo validar la conexión con ${provider} (modelo: ${activeModel}). Verifica que la API key sea correcta y que tu cuenta tenga acceso y cuota.`);
         }
 
-        // 2. Try to save to DB if available
-        if (prisma) {
-            const encryptedKey = Vault.encrypt(rawKey);
-
+        // 2. Try to save to DB if available and Vault is configured
+        if (prisma && Vault.isConfigured()) {
             try {
+                const encryptedKey = Vault.encrypt(rawKey);
                 return await prisma.lLMProviderSettings.upsert({
                     where: { userId_provider: { userId, provider } },
                     update: {
@@ -151,7 +150,7 @@ export class LlmRouter {
                     }
                 });
             } catch (dbError) {
-                console.warn("Failed to save to database:", dbError);
+                console.warn("Failed to persist provider settings to database (proceeding with BYOK):", dbError);
             }
         }
 

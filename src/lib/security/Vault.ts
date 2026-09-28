@@ -10,13 +10,19 @@ export class Vault {
     private static readonly IV_LENGTH = 12;
     private static readonly AUTH_TAG_LENGTH = 16;
 
+    static isConfigured(): boolean {
+        const key = process.env.SECRET_ENCRYPTION_KEY;
+        return typeof key === "string" && key.trim().length > 0;
+    }
+
     private static getEncryptionKey(): Buffer {
         const key = process.env.SECRET_ENCRYPTION_KEY;
         if (!key) {
             throw new Error("SECRET_ENCRYPTION_KEY is not defined in environment variables");
         }
-        // Key is expected to be Base64 encoded 32 bytes
-        return Buffer.from(key, "base64");
+        const buf = Buffer.from(key, "base64");
+        if (buf.length === 32) return buf;
+        return crypto.createHash("sha256").update(key).digest();
     }
 
     /**
