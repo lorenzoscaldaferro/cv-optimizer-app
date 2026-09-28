@@ -266,37 +266,56 @@ function buildCV(data: CVData): Paragraph[] {
 }
 
 export async function POST(req: NextRequest) {
-  const { cvJson, filename } = await req.json();
+  try {
+    const body = await req.json();
+    const cvJson = (body.cvJson || body.cvData || {}) as CVData;
+    const filename = (body.filename as string) || "CV_output.docx";
 
-  const doc = new Document({
-    styles: {
-      default: {
-        document: {
-          run: { font: FONT, size: hpt(10.5), color: "000000" },
-        },
-      },
-    },
-    sections: [
-      {
-        properties: {
-          page: {
-            margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
+    if (!cvJson || typeof cvJson !== "object") {
+      return new Response(JSON.stringify({ error: "Faltan datos de CV para generar el documento" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    const doc = new Document({
+      styles: {
+        default: {
+          document: {
+            run: { font: FONT, size: hpt(10.5), color: "000000" },
           },
         },
-        children: buildCV(cvJson as CVData),
       },
-    ],
-  });
+      sections: [
+        {
+          properties: {
+            page: {
+              margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
+            },
+          },
+          children: buildCV(cvJson),
+        },
+      ],
+    });
 
-  const buffer = await Packer.toBuffer(doc);
-  const docxFilename = (filename as string) || "CV_output.docx";
-  const uint8 = new Uint8Array(buffer);
+    const buffer = await Packer.toBuffer(doc);
+    const uint8 = new Uint8Array(buffer);
 
-  return new Response(uint8, {
-    headers: {
-      "Content-Type":
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "Content-Disposition": `attachment; filename="${docxFilename}"`,
-    },
-  });
+    return new Response(uint8, {
+      headers: {
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "Content-Disposition": `attachment; filename="${filename}"`,
+      },
+    });
+  } catch (error) {
+    console.error("Error generating docx:", error);
+    return new Response(
+      JSON.stringify({ error: "Error al generar el documento Word .docx" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
 }
