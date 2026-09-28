@@ -77,9 +77,9 @@ const initialState = {
   openaiApiKey: null,
   openrouterApiKey: null,
   groqApiKey: null,
-  geminiModel: "gemini-2.5-flash",
-  openaiModel: "gpt-4o",
-  openrouterModel: "openai/gpt-4o-mini",
+  geminiModel: "gemini-3.8-flash",
+  openaiModel: "gpt-6-sol",
+  openrouterModel: "google/gemini-3.8-flash",
   groqModel: "llama-3.3-70b-versatile",
   messages: [],
   isStreaming: false,
@@ -196,6 +196,21 @@ export const useCVStore = create<CVStore>()(
     }),
     {
       name: "cv-session",
+      version: 2,
+      migrate: (persistedState: unknown) => {
+        if (persistedState && typeof persistedState === "object") {
+          const state = persistedState as Record<string, unknown>;
+          if (
+            typeof state.geminiModel === "string" &&
+            (state.geminiModel.includes("2.5") ||
+              state.geminiModel.includes("2.0") ||
+              state.geminiModel.includes("1.5"))
+          ) {
+            state.geminiModel = "gemini-3.8-flash";
+          }
+        }
+        return persistedState;
+      },
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({
         sessionMode: state.sessionMode,

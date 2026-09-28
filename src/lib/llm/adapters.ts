@@ -21,9 +21,14 @@ export class GeminiAdapter implements LLMAdapter {
     private client: GoogleGenerativeAI;
     private modelName: string;
 
-    constructor(apiKey: string, modelName: string = "gemini-2.5-flash") {
+    constructor(apiKey: string, modelName: string = "gemini-3.8-flash") {
         this.client = new GoogleGenerativeAI(apiKey);
-        this.modelName = modelName || "gemini-2.5-flash";
+        let normalized = modelName || "gemini-3.8-flash";
+        // Migrate any deprecated 2.5, 2.0, or 1.5 models automatically
+        if (normalized.includes("2.5") || normalized.includes("2.0") || normalized.includes("1.5")) {
+            normalized = "gemini-3.8-flash";
+        }
+        this.modelName = normalized;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,10 +76,11 @@ export class GeminiAdapter implements LLMAdapter {
             };
         } catch (streamError) {
             const errStr = String(streamError);
-            if (errStr.includes("503") && this.modelName !== "gemini-2.5-flash") {
-                console.warn(`Model ${this.modelName} hit 503 demand spike, falling back to gemini-2.5-flash`);
+            // If temporary 503 spike or 404 on preview model, fallback to gemini-3.5-flash
+            if ((errStr.includes("503") || errStr.includes("404")) && this.modelName !== "gemini-3.5-flash") {
+                console.warn(`Model ${this.modelName} hit spike or deprecation (${errStr.slice(0, 100)}), falling back to gemini-3.5-flash`);
                 const fallbackModel = this.client.getGenerativeModel({
-                    model: "gemini-2.5-flash",
+                    model: "gemini-3.5-flash",
                     systemInstruction: systemMsg ? (typeof systemMsg.content === "string" ? systemMsg.content : JSON.stringify(systemMsg.content)) : undefined,
                 });
                 const fallbackChat = fallbackModel.startChat({ history });
@@ -87,7 +93,7 @@ export class GeminiAdapter implements LLMAdapter {
                 }
                 return {
                     content: fallbackContent,
-                    model: "gemini-2.5-flash"
+                    model: "gemini-3.5-flash"
                 };
             }
             throw streamError;
@@ -113,12 +119,22 @@ export class GeminiAdapter implements LLMAdapter {
             if (msg.includes("API key not valid") || msg.includes("API_KEY_INVALID")) {
                 return false;
             }
-            if (msg.includes("404") || msg.includes("not found")) {
-                return false;
-            }
-            // For temporary 503 high demand or 429 quota spikes, if the key is valid, do not reject valid keys
+            // If 503 or 429, try gemini-3.5-flash to verify the key
             if (msg.includes("503") || msg.includes("429")) {
-                return true;
+                try {
+                    const fallback = this.client.getGenerativeModel({ model: "gemini-3.5-flash" });
+                    await fallback.generateContent({
+                        contents: [{ role: "user", parts: [{ text: "hi" }] }],
+                        generationConfig: { maxOutputTokens: 2 }
+                    });
+                    return true;
+                } catch (fallbackErr: unknown) {
+                    const fMsg = fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr);
+                    if (fMsg.includes("API key not valid") || fMsg.includes("API_KEY_INVALID")) {
+                        return false;
+                    }
+                    return true;
+                }
             }
             return false;
         }

@@ -20,11 +20,9 @@ const providerConfig: Record<AIEngine, { name: string; keyUrl: string; placehold
         defaultModel: "gemini-3.8-flash",
         modelOptions: [
             { value: "gemini-3.8-flash", label: "Gemini 3.8 Flash (Última Generación — Recomendado)" },
+            { value: "gemini-3.5-flash", label: "Gemini 3.5 Flash (Alta Disponibilidad y Estabilidad)" },
             { value: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro Preview (Máximo Razonamiento)" },
             { value: "gemini-3.1-flash-lite", label: "Gemini 3.1 Flash Lite (Baja Latencia)" },
-            { value: "gemini-3.5-flash", label: "Gemini 3.5 Flash" },
-            { value: "gemini-2.5-flash", label: "Gemini 2.5 Flash (Alta Cuota Gratuita / Estable)" },
-            { value: "gemini-2.5-pro", label: "Gemini 2.5 Pro" },
             { value: "gemini-flash-latest", label: "Gemini Flash Latest" },
             { value: "gemini-pro-latest", label: "Gemini Pro Latest" },
             { value: "custom", label: "Personalizado" },
