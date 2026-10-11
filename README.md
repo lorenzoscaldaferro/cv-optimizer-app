@@ -2,7 +2,7 @@
 
 AI-powered resume/CV optimizer focused on **ATS-friendly formatting and content improvement**. Upload a CV (PDF or DOCX), get structured feedback, and download an editable, optimized version.
 
-🔗 **Live demo:** https://cv-optimizer-app.netlify.app/
+🔗 **Live demo:** https://cv-optimizer-app-ten.vercel.app/
 
 ---
 
